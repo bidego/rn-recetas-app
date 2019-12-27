@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import MenuButton from '../components/MenuButton';
 
 const FiltersScreen = () => {
     return (
@@ -7,6 +8,13 @@ const FiltersScreen = () => {
             <Text>Filters Screen</Text>
         </View>
     )
+}
+
+FiltersScreen.navigationOptions = navData => {
+    return {
+        headerTitle: 'Filter Meals',
+        headerLeft: (<MenuButton navigation={navData.navigation} />)
+    }
 }
 
 const styles = StyleSheet.create({

@@ -1,19 +1,90 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-const MealDetailsScreen = () => {
+import { View, ImageBackground, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import TitleText from '../components/TitleText';
+import BText from '../components/BText';
+import NoteCard from '../components/NoteCard';
+import Strong from '../components/Strong';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import CustomHeaderButton from '../components/HeaderButton';
+const MealDetailsScreen = (props) => {
+    const item = props.navigation.getParam('item');
     return (
         <View style={styles.screen}>
-            <Text>Meal Details Screen</Text>
+            <ScrollView style={styles.container}>
+                <ImageBackground
+                    resizeMode= 'cover'
+                    style={{flex:1,width:'100%',height:'100%'}}
+                    source={{uri: item.imageUrl}}
+                >
+                    <View style={styles.receiptContainer}>
+                        <TitleText style={styles.title}>{item.title}</TitleText>
+                        <View style={styles.ul}>
+                            <BText style={styles.paragraph}>{item.duration} minutes</BText>
+                        </View>
+                        <View style={styles.ul}>
+                            <BText style={styles.paragraph}>Complexity: 
+                                <Strong> {item.complexity}</Strong>
+                            </BText>
+                        </View>
+                        <View style={styles.ul}>
+                            <BText style={styles.paragraph}>Affordability: 
+                                <Strong> {item.affordability}</Strong>
+                            </BText>
+                        </View>
+                        <View>
+                            <NoteCard items={item.ingredients} title='Ingredients' />
+                        </View>
+                        <View>
+                            <NoteCard items={item.steps} title='Steps' />
+                        </View>
+                    </View>
+                </ImageBackground>
+            </ScrollView>
         </View>
     )
 }
 
+MealDetailsScreen.navigationOptions = navigationData => {
+    const meal = navigationData.navigation.getParam('item');
+    return {
+        headerTitle: meal.title,
+        headerRight: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item title='Favorite' iconName='ios-star' onPress={()=>{ console.log('Mark as fav')}} />
+        </HeaderButtons>
+    }
+}
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    container: {
+        width: '100%',
+        height: '80%'
+    },
+    receiptContainer: {
+        backgroundColor: 'rgba(255,255,255,0.5)',
+        margin:10,
+        padding: 10
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        padding: 10,
+        width: '100%'
+    },
+    button: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: 100
+    },
+    title: {
+        color: 'black'
+    },
+    paragraph: {
+        color: 'black'
     }
 })
 
