@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import NoteCard from '../components/NoteCard';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleFavorite } from '../store/actions/meals';
 
 const MealDetailsScreen = (props) => {
@@ -63,7 +63,7 @@ MealDetailsScreen.navigationOptions = navigationData => {
     return {
         headerTitle: meal.title,
         headerRight: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-            <Item title='Favorite' iconName='ios-star' onPress={toggleFavorite} />
+            <Item title='Favorite' iconName={isFavorite ? 'ios-star' : 'ios-star-outline'} onPress={toggleFavorite} />
         </HeaderButtons>
     }
 }
