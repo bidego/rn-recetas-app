@@ -3,8 +3,9 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import MealItem from '../components/MealItem';
 
 const MealsList= props => {
-    
     const renderMeal = data => {
+        console.log('renderMeal!!!!')
+        console.log(data)
         const goDetails = () => {
             props.navigation.navigate({
                 routeName: 'MealDetails',

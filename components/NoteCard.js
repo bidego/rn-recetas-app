@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import Strong from '../components/Strong';
+import TitleText from '../components/TitleText';
 import Card from '../components/Card';
 import BText from '../components/BText';
 
 const NoteCard = props => {
     return (
         <View>
-            <Strong style={{fontSize: 16}}>{props.title}</Strong>
+            <Card>
+                <TitleText style={{fontSize: 16}}>{props.title}</TitleText>
+            </Card>
             {props.items.map( (item)=>(
                 <Card
                     keyExtractor={(item,index) => item}

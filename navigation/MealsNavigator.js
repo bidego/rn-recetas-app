@@ -77,13 +77,7 @@ const tabNavigationConfig = {
 
 const FiltersNavigator = createStackNavigator({
     Filters: FiltersScreen,
-}, {
-    defaultNavigationOptions: defaultStackNavOpts
-})
-
-FiltersScreen.navigationOptions = {
-    headerTitle: 'Filter Meals'
-}
+}, defaultStackNavOpts)
 
 const MealsFavTabNavigator = Platform.OS === 'android'
     ? createMaterialBottomTabNavigator(tabNavigationConfig,{

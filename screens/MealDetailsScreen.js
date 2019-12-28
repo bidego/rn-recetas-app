@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, ImageBackground, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import TitleText from '../components/TitleText';
-import BText from '../components/BText';
 import NoteCard from '../components/NoteCard';
-import Strong from '../components/Strong';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
+import { useDispatch } from 'react-redux';
+import { toggleFavorite } from '../store/actions/meals';
+
 const MealDetailsScreen = (props) => {
     const item = props.navigation.getParam('item');
+    const dispatch = useDispatch();
+    const curFavMeal = useSelector(state=> state.meals.favoriteMeals.some(m=>m.id===item.id));
+
+    // useCallback recrea a funcion solo cuando alguna de las dependencias
+    // pasadas en el array del segundo parámetro cambia
+    const handleToggleFavorite = useCallback(() => {
+        dispatch(toggleFavorite(item.id));
+    }, [dispatch, item]);
+
+    useEffect(() => {
+        props.navigation.setParams({toggleFav: handleToggleFavorite});
+    }, [handleToggleFavorite]);
+
+    useEffect(() => {
+        props.navigation.setParams({isFav: curFavMeal});
+    }, [curFavMeal]);
+
     return (
         <View style={styles.screen}>
             <ScrollView style={styles.container}>
@@ -18,19 +35,12 @@ const MealDetailsScreen = (props) => {
                     source={{uri: item.imageUrl}}
                 >
                     <View style={styles.receiptContainer}>
-                        <TitleText style={styles.title}>{item.title}</TitleText>
                         <View style={styles.ul}>
-                            <BText style={styles.paragraph}>{item.duration} minutes</BText>
-                        </View>
-                        <View style={styles.ul}>
-                            <BText style={styles.paragraph}>Complexity: 
-                                <Strong> {item.complexity}</Strong>
-                            </BText>
-                        </View>
-                        <View style={styles.ul}>
-                            <BText style={styles.paragraph}>Affordability: 
-                                <Strong> {item.affordability}</Strong>
-                            </BText>
+                            <NoteCard items={[
+                                `${item.duration} minutes`,
+                                `${item.complexity.toUpperCase()}`,
+                                `${item.affordability.toUpperCase()}`]}
+                                title={item.title} />
                         </View>
                         <View>
                             <NoteCard items={item.ingredients} title='Ingredients' />
@@ -47,10 +57,13 @@ const MealDetailsScreen = (props) => {
 
 MealDetailsScreen.navigationOptions = navigationData => {
     const meal = navigationData.navigation.getParam('item');
+    const toggleFavorite = navigationData.navigation.getParam('toggleFav');
+    const isFavorite = navigationData.navigation.getParam('isFav');
+
     return {
         headerTitle: meal.title,
         headerRight: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-            <Item title='Favorite' iconName='ios-star' onPress={()=>{ console.log('Mark as fav')}} />
+            <Item title='Favorite' iconName='ios-star' onPress={toggleFavorite} />
         </HeaderButtons>
     }
 }
